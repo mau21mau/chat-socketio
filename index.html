@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/media/estilo.css">
+        <script src='/socket.io/socket.io.js'></script>
+        <script src='//code.jquery.com/jquery-1.7.2.min.js'></script>
+        <script src='/media/script.js'></script>
+    </head>
+    <body>
+        <div id="wrap-all">
+        
+            <div id="clumn1" class="column" >
+                <input type="text" id="nome-field" placeholder="nome" />
+                <div id="nome"></div>
+                <a class="button" href="javascript:void(0);" id="conectar">Conectar</a>
+                <a class="button" href="javascript:void(0);" id="desconectar">Desconectar</a>
+                <div id="friend"></div>
+                <div class="clear"></div>
+                <div id="menssages">
+                
+                </div>
+                <div id="wrap-text">
+                    <textarea id="text-field"></textarea>
+                    <button id="enviar">Enviar</button>
+                </div>
+            </div>
+            
+            <div id="clumn2" class="column" >
+                <h3>Usuarios</h3>
+                <div id="usuarios">
+                    
+                </div>
+            </div>
+            <div class="clear"></div>
+            
+        </div>
+    </body>
+</html>

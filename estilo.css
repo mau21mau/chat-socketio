@@ -1,0 +1,265 @@
+body{
+    background: url("grey-bg.jpg");
+}
+
+#wrap-all{
+    width: 960px;
+    margin: 0 auto;
+}
+
+.column{
+    float: left;
+    border: solid 1px #555;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#clumn1{
+    margin: 0 0 0 10px;
+    width: 650px;
+    position: relative;
+    
+}
+
+#clumn2{
+    margin: 0 0 0 10px;
+    width: 200px;
+}
+
+.button{
+    display: block;
+    padding: 6px;
+    text-decoration: none;
+    font-size: 1.1em;
+    border-radius: 4px;
+    float: left;
+}
+
+#conectar{
+    border: solid 1px #FFF;
+    width: 65px;
+    text-align: center;
+    color: #FFF;
+    background-color: #25547B;
+}
+
+#desconectar{
+    background-color: #BF3330;
+    border: solid 1px #FFF;
+    color: #FFF;
+    display: none;
+    margin-left: 10px;
+}
+
+#nome-field{
+    height: 25px;
+    display: block;
+    border-radius: 5px;
+    border: solid 1px #25547B;
+    padding: 4px;
+    font-size: 1.1em;
+    color: #25547B;
+    float: left;
+}
+
+#nome{
+    display: block;
+    height: 25px;
+    max-width: 100px;
+    border-radius: 5px;
+    padding: 7px 4px 1px 4px;
+    border: solid 1px #FFF;
+    text-align: center;
+    color: #FFF;
+    background-color: #25547B;
+    float: left;
+    font-size: 1.1em;
+    display: none;
+}
+
+#friend{
+    display: block;
+    height: 25px;
+    border-radius: 5px;
+    padding: 7px 4px 1px 4px;
+    border: solid 1px #9E8808;
+    text-align: center;
+    color: #9E8808;
+    background-color: #faf9e8;
+    float: left;
+    font-size: 1.1em;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    display: none;
+}
+
+#text-field{
+    display: block;
+    margin: 0 auto;
+    width: 632px;
+    height: 40px;
+    border-radius: 5px;
+    border: solid 1px #25547B;
+    padding: 4px;
+    font-size: 1.1em;
+    color: #25547B;
+    outline: none;
+    padding-bottom: 20px;
+}
+
+#wrap-text{
+    position: relative;
+    width: 642px;
+    margin: 5px auto;
+    margin-bottom: 0px;
+}
+
+#enviar{
+    padding: 5px;
+    position: absolute;
+    right: 0px;
+    bottom: -2px;
+    right: -2px;
+    background-color: #8EEC6A;
+    color: #333;
+    border: solid 1px #555;
+    border-radius: 5px 0 5px 0;
+}
+
+#usuarios{
+    min-height: 130px;
+}
+
+.usuario{
+    display: block;
+    height: 25px;
+    width: 150px;
+    border-radius: 5px;
+    padding: 5px 5px 2px 5px;
+    border: solid 1px #25547B;
+    color: #25547B;
+    text-decoration: none;
+    font-size: 1.1em;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.usuario.current{
+    background-color: #C5E3E7;
+}
+
+
+#menssages{
+    width: 630px;
+    margin: 20px auto;
+    padding: 5px;
+    max-height: 600px;
+    border: solid 1px #25547B;
+    border-radius: 5px;
+    overflow: auto;
+    background-color: #FFF;
+}
+
+#menssages .mensagem{
+    display: none;
+}
+
+.profile-image, .wrap-balloon{
+    float: left;
+}
+
+.profile-image{
+    width: 30px;
+    height: 35px;
+    background: url("profile-img.png") no-repeat;
+}
+
+.wrap-balloon{
+    margin: 0 auto;
+}
+
+.wrap-balloon, .my-balloon-header, .my-balloon-text, .my-balloon-bottom,
+.friend-balloon-header, .friend-balloon-text, .friend-balloon-bottom{
+    width: 517px;
+}
+
+.my-balloon-header{
+    height: 27px;
+    background: url("my-balloon-top.png") no-repeat;
+}
+.my-balloon-text{
+    padding: 0 2px 0 2px;
+    font-family: Monospace;
+    line-height: 20px;
+    margin-top: 0;
+    color: #333;
+    background: url("my-balloon-middle.png") repeat-y;
+}
+
+.my-balloon-bottom{
+    height: 15px;
+    background: url("my-balloon-bottom.png") no-repeat;
+}
+
+.friend-balloon-header{
+    height: 26px;
+    background: url("friend-balloon-top.png") no-repeat;
+}
+
+.friend-balloon-text{
+    padding: 0 2px 0 2px;
+    font-family: Monospace;
+    line-height: 20px;
+    margin-top: 0;
+    color: #333;
+    background: url("friend-balloon-middle.png") repeat-y;
+}
+
+.friend-balloon-bottom{
+    height: 15px;
+    background: url("friend-balloon-bottom.png") no-repeat;
+}
+
+.my-balloon-header .user-name{
+    color: #a7cf35;
+    font-family: Monospace;
+    padding: 8px 0 0 25px;
+    font-size: 1.1em;
+}
+
+.friend-balloon-header .user-name{
+    color: #e9c916;
+    font-family: Monospace;
+    padding: 8px 0 0 25px;
+    font-size: 1.1em;
+}
+
+.text-message{
+    text-align: justify;
+    display: block;
+    width: 475px;
+    padding: 0 10px 0 16px;
+    position: relative;
+    margin: 0 0 0 15px;
+}
+
+.clear{
+    clear: both;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
