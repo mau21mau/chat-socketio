@@ -172,7 +172,7 @@ body{
 .profile-image{
     width: 30px;
     height: 35px;
-    background: url("profile-img.png") no-repeat;
+    background: url("/static/img/profile-img.png") no-repeat;
 }
 
 .wrap-balloon{
@@ -186,7 +186,7 @@ body{
 
 .my-balloon-header{
     height: 27px;
-    background: url("my-balloon-top.png") no-repeat;
+    background: url("/static/img/my-balloon-top.png") no-repeat;
 }
 .my-balloon-text{
     padding: 0 2px 0 2px;
@@ -194,17 +194,17 @@ body{
     line-height: 20px;
     margin-top: 0;
     color: #333;
-    background: url("my-balloon-middle.png") repeat-y;
+    background: url("/static/img/my-balloon-middle.png") repeat-y;
 }
 
 .my-balloon-bottom{
     height: 15px;
-    background: url("my-balloon-bottom.png") no-repeat;
+    background: url("/static/img/my-balloon-bottom.png") no-repeat;
 }
 
 .friend-balloon-header{
     height: 26px;
-    background: url("friend-balloon-top.png") no-repeat;
+    background: url("/static/img/friend-balloon-top.png") no-repeat;
 }
 
 .friend-balloon-text{
@@ -213,12 +213,12 @@ body{
     line-height: 20px;
     margin-top: 0;
     color: #333;
-    background: url("friend-balloon-middle.png") repeat-y;
+    background: url("f/static/img/riend-balloon-middle.png") repeat-y;
 }
 
 .friend-balloon-bottom{
     height: 15px;
-    background: url("friend-balloon-bottom.png") no-repeat;
+    background: url("/static/img/friend-balloon-bottom.png") no-repeat;
 }
 
 .my-balloon-header .user-name{
