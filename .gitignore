@@ -1,0 +1,22 @@
+# Compiled source #
+###################
+*.pyc
+node_modules/
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.settings
+.project
+.pydevproject
+
+# Config Files #
+######################
+#run_locale.py
+#proxy.txt
