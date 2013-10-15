@@ -73,7 +73,7 @@ var connection = io.sockets.on('connection', function(socket) {
         var mySocket = data.mySocket;
         var friendsSocket = data.friendsSocket;
 
-        var history = log_chat[friendsSocket+mySocket];
+        var history = log_chat[friendsSocket+","+mySocket];
         
         socket.emit('sendHistory', history);
         //console.log("Meu id: "+mySocket+"| Amigo id: "+friendsSocket);
