@@ -1,3 +1,8 @@
+*{
+    font-family: 'Open Sans', Helvetica, Arial;
+    font-size: 1em;
+}
+
 body{
     background: url("/static/img/grey-bg.jpg");
 }
@@ -14,33 +19,81 @@ body{
     border-radius: 5px;
 }
 
-#clumn1{
+#column1{
     margin: 0 0 0 10px;
     width: 650px;
     position: relative;
+    height: 600px;
     
 }
 
-#clumn2{
+#column2{
+    border: solid 1px #386F81;
     margin: 0 0 0 10px;
     width: 200px;
+    padding-top: 0px;
+    height: 605px;
+    background: #E7F1FE;
+}
+
+#column2 h3{
+    color: #386F81;
+    padding: 5px;
+    text-align: center;
+    width: 202px;
+    margin-top: 0;
+    margin-left: -6px;
+    border: solid 1px #386F81;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-radius: 5px;
+}
+
+#column2 h4{
+    color: #888;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+}
+
+#column2 .userset-overlay{
+    display: none;
+    background: url("/static/img/overlay-bg.png") ;
+    position: absolute;
+    width: 210px;
+    height: 576px;
+    margin-top: 34px;
+    margin-left: -5px;
+    border-radius: -5px -5px 5px 5px;
+}
+
+#column2 .loading{
+    background: url("/static/img/loading.gif") ;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    margin-top: 272px;
+    margin-left: 89px;
 }
 
 .button{
     display: block;
-    padding: 6px;
+    padding: 6px 35px 6px 35px;
     text-decoration: none;
-    font-size: 1.1em;
     border-radius: 4px;
     float: left;
 }
 
 #conectar{
     border: solid 1px #FFF;
-    width: 65px;
     text-align: center;
     color: #FFF;
     background-color: #25547B;
+}
+
+#conectar.connecting{
+    background-color: #758592;
 }
 
 #desconectar{
@@ -52,28 +105,24 @@ body{
 }
 
 #nome-field{
+    outline: none;
     height: 25px;
     display: block;
     border-radius: 5px;
     border: solid 1px #25547B;
     padding: 4px;
-    font-size: 1.1em;
     color: #25547B;
     float: left;
 }
 
 #nome{
     display: block;
-    height: 25px;
-    max-width: 100px;
     border-radius: 5px;
-    padding: 7px 4px 1px 4px;
     border: solid 1px #FFF;
     text-align: center;
     color: #FFF;
     background-color: #25547B;
     float: left;
-    font-size: 1.1em;
     display: none;
 }
 
@@ -128,21 +177,30 @@ body{
 }
 
 #usuarios{
-    min-height: 130px;
+    width: 210px;
+    height: 576px;
+    margin-top: 34px;
+    margin-left: -5px;
+    border-radius: -5px -5px 5px 5px;
 }
 
 .usuario{
     display: block;
     height: 25px;
-    width: 150px;
-    border-radius: 5px;
+    width: 200px;
     padding: 5px 5px 2px 5px;
     border: solid 1px #25547B;
     color: #25547B;
+    background: #C4D4E8;
     text-decoration: none;
     font-size: 1.1em;
-    margin-top: 10px;
+    margin-top: -1px;
+    margin-left: -1px;
     cursor: pointer;
+}
+
+.usuario:hover{
+    background: #A6C0E2;
 }
 
 .usuario.current{
@@ -213,7 +271,7 @@ body{
     line-height: 20px;
     margin-top: 0;
     color: #333;
-    background: url("f/static/img/riend-balloon-middle.png") repeat-y;
+    background: url("/static/img/friend-balloon-middle.png") repeat-y;
 }
 
 .friend-balloon-bottom{

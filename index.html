@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet'>
         <link rel="stylesheet" type="text/css" href="/static/css/estilo.css">
         <script src='/socket.io/socket.io.js'></script>
         <script src='//code.jquery.com/jquery-1.7.2.min.js'></script>
@@ -9,11 +10,11 @@
     <body>
         <div id="wrap-all">
             
-            <div id="clumn1" class="column" >
+            <div id="column1" class="column" >
                 <input type="text" id="nome-field" placeholder="nome" />
-                <div id="nome"></div>
-                <a class="button" href="javascript:void(0);" id="conectar">Conectar</a>
-                <a class="button" href="javascript:void(0);" id="desconectar">Desconectar</a>
+                <div class="button" id="nome"></div>
+                <a class="button" href="javascript:void(0);" id="conectar">Connect</a>
+                <a class="button" href="javascript:void(0);" id="desconectar">Disconnect</a>
                 <div id="friend"></div>
                 <div class="clear"></div>
                 <div id="menssages">
@@ -21,14 +22,15 @@
                 </div>
                 <div id="wrap-text">
                     <textarea id="text-field"></textarea>
-                    <button id="enviar">Enviar</button>
+                    <button id="enviar">Send</button>
                 </div>
             </div>
             
-            <div id="clumn2" class="column" >
-                <h3>Usuarios</h3>
+            <div id="column2" class="column" >
+                <div class="userset-overlay"><div class="loading"></div></div>
+                <h3>Connected users</h3>
                 <div id="usuarios">
-                    
+                    <h4>You re not connected yet! :)</h4>
                 </div>
             </div>
             <div class="clear"></div>
