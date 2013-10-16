@@ -119,9 +119,9 @@ var app_client = {
                 // Recebe a mensagem do amigo
                 app_client.client_socket.on('recieveMessage', function (data) {
                     var recieved_message = data.message;
-                    var enviadoPor = data.enviadoPor;
+                    var sender = data.sender;
                     console.debug("Enviada POR "+data.senderSocket);
-                    var new_message =  createFriendMessage( enviadoPor, recieved_message );
+                    var new_message =  createFriendMessage( sender, recieved_message );
 
                     if ( $(".new-messages") ){
                         var id = $(".new-messages").attr("data-idinterval");
@@ -178,12 +178,12 @@ var app_client = {
 
                             if ( senderSocket == app_client.client_socket.socket.sessionid ){
 
-                                elementMensagem = createMyMessage(data[i].enviadoPor, data[i].message);
+                                elementMensagem = createMyMessage(data[i].sender, data[i].message);
 
                                 $("#menssages").append( $(elementMensagem).fadeIn(500) );
 
                             }else{
-                                elementMensagem = createFriendMessage(data[i].enviadoPor, data[i].message);
+                                elementMensagem = createFriendMessage(data[i].sender, data[i].message);
                                 console.debug(data[i].message);
                                 $("#menssages").append( $(elementMensagem).fadeIn(500) );
 
@@ -313,8 +313,8 @@ function send_message(){
         var msg_text = document.getElementById("text-field").value;
         var socketId = $(".current").attr("id");
 
-        var data = {message: msg_text, socket : socketId, enviadoPor: app_client.client_socket.socket.sessionid }
-        console.debug(data.enviadoPor);
+        var data = {message: msg_text, socket : socketId, sender: app_client.client_socket.socket.sessionid }
+        console.debug(data.sender);
         // Envia mensagem para o amigo
         app_client.client_socket.emit('sendMessage', data);
         

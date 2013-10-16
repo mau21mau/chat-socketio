@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var debug = parseInt( fs.readFileSync(__dirname + '/debug') );
 
 var app = http.createServer(function(req, res) {
     var index = fs.readFileSync(__dirname + '/index.html');
@@ -26,7 +27,9 @@ var connection = io.sockets.on('connection', function(socket) {
         // Envia o novo usuario conectado para todos
         io.sockets.emit('reciveNewClient', {socketId : socket.id, nome : data.nome} );
         
-        console.log(data.nome+" conectou-se no socket: "+ socket.id);
+        if (debug){
+            console.log(data.nome+" conectou-se no socket: "+ socket.id);
+        }
         
     });
     
@@ -35,17 +38,19 @@ var connection = io.sockets.on('connection', function(socket) {
         var enviadaPara = usuarios[toSocketId].nome; //Obtem o nome de quem esta recebendo
         var menssagem_text = data.message; // Obtem a mensagem que esta sendo enviada
         
-        var fromSocketId = data.enviadoPor; // Obtem o id do socket de quem esta enviando
-        console.log("Enviada POR: "+fromSocketId);
+        var fromSocketId = data.sender; // Obtem o id do socket de quem esta enviando
 
-        var enviadoPor = usuarios[fromSocketId].nome; //Obtem o nome de quem esta enviando
+        var sender = usuarios[fromSocketId].nome; //Obtem o nome de quem esta enviando
         var reciever_socket = io.sockets.socket(toSocketId); // obtem a instancia do socket da pessoa que ira receber a mensagem
 
         
-        var mensagem = {message : menssagem_text, enviadoPor: enviadoPor, senderSocket : fromSocketId };
+        var mensagem = {message : menssagem_text, sender: sender, senderSocket : fromSocketId };
         reciever_socket.emit('recieveMessage', mensagem); // envia a mensagem
-        console.log("Mensagem: '"+data.message+"' -> para '"+enviadaPara+"' | id-conexao: "+reciever_socket.id);
-        
+
+        if (debug){
+            console.log("Mensagem: "+sender+" '"+data.message+"' -> para '"+enviadaPara+"' | id-conexao: "+reciever_socket.id);
+        }
+
         // Faz o log das mensagens
         if ( log_chat[fromSocketId+","+toSocketId] ){
 
@@ -80,9 +85,27 @@ var connection = io.sockets.on('connection', function(socket) {
         //console.log(log_chat[mySocket+friendsSocket]);
     });
 
-    socket.on("disconnect", function(){ 
-        console.log("disconnected : " + usuarios[socket.id].nome);
+    socket.on("disconnect", function(){
+        if (debug){
+            console.log("disconnected : " + usuarios[socket.id].nome);
+        }
+
+        for (var usuario in usuarios){
+            var socket_id = usuarios[usuario].socketId;
+            
+            if (socket_id != socket.id){
+                delete log_chat[socket.id+","+socket_id];
+                delete log_chat[socket_id+","+socket.id];
+            }
+            
+        }
+
         delete usuarios[socket.id];
+        
+        if (debug){
+            console.log(log_chat);
+        }
+
         io.sockets.emit('disconnectedClient', {socketId : socket.id} );
     });
     
