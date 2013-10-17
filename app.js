@@ -12,101 +12,100 @@ var app = http.createServer(function(req, res) {
 var io = require('socket.io').listen(app, { log: false } );
 
 var connected_clients={};
-var usuarios = {};
+var users = {};
 var log_chat = {};
 
 var connection = io.sockets.on('connection', function(socket) {
    
-    // Este evento salva Nome : idDoSocket
+    // This event is just to recieve the user name sender the client
     socket.on('saveConnection', function (data) {
-        usuarios[socket.id] = {socketId : socket.id, nome : data.nome};// Salva o cliente atual para ser exibido pro client
+        users[socket.id] = {socket_id : socket.id, name : data.name};// Save the client name and socket id into users
         
-        // Envia lista de usuarios para quem acabu de se conectar
-        socket.emit('reciveConnectedClients', usuarios);
+        // Gives back the connected clients to the user that has just connected
+        socket.emit('reciveConnectedClients', users);
 
-        // Envia o novo usuario conectado para todos
-        io.sockets.emit('reciveNewClient', {socketId : socket.id, nome : data.nome} );
+        // Send the users list to everyone connected
+        io.sockets.emit('reciveNewClient', {socket_id : socket.id, name : data.name} );
         
         if (debug){
-            console.log(data.nome+" conectou-se no socket: "+ socket.id);
+            console.log('"'+data.name+'" is connected on socket: '+ socket.id);
         }
         
     });
     
     socket.on('sendMessage', function (data) {
-        var toSocketId = data.socket;// Obtem o id do socket do amigo que ira receber a mensagem
-        var enviadaPara = usuarios[toSocketId].nome; //Obtem o nome de quem esta recebendo
-        var menssagem_text = data.message; // Obtem a mensagem que esta sendo enviada
-        
-        var fromSocketId = data.sender; // Obtem o id do socket de quem esta enviando
 
-        var sender = usuarios[fromSocketId].nome; //Obtem o nome de quem esta enviando
-        var reciever_socket = io.sockets.socket(toSocketId); // obtem a instancia do socket da pessoa que ira receber a mensagem
+        var reciever_socket = data.socket;// Gets the destination socker id
+        var menssagem_text = data.message; // Gets the text message being sent
+        
+        var sender_socket_id = socket.id; // Gets the sender socket id
+
+        var sender_name = users[sender_socket_id].name; //Obtem o name de quem esta enviando
+        var reciever_socket_obj = io.sockets.socket(reciever_socket); // obtem a instancia do socket da pessoa que ira receber a message
 
         
-        var mensagem = {message : menssagem_text, sender: sender, senderSocket : fromSocketId };
-        reciever_socket.emit('recieveMessage', mensagem); // envia a mensagem
+        var message = {message : menssagem_text, sender_name: sender_name, sender_socket : sender_socket_id };
+        reciever_socket_obj.emit('recieveMessage', message); // envia a message
+
+        console.log(sender_name);
 
         if (debug){
-            console.log("Mensagem: "+sender+" '"+data.message+"' -> para '"+enviadaPara+"' | id-conexao: "+reciever_socket.id);
+            console.log("Message: \""+data.message+"\" from \""+users[sender_socket_id].name+"\" -> to \""+users[reciever_socket].name);
         }
 
         // Faz o log das mensagens
-        if ( log_chat[fromSocketId+","+toSocketId] ){
+        if ( log_chat[sender_socket_id+","+reciever_socket] ){
 
-            log_chat[fromSocketId+","+toSocketId].push(mensagem);
+            log_chat[sender_socket_id+","+reciever_socket].push(message);
 
         }else{
-            log_chat[fromSocketId+","+toSocketId] = [];
-            log_chat[fromSocketId+","+toSocketId].push(mensagem);
+            log_chat[sender_socket_id+","+reciever_socket] = [];
+            log_chat[sender_socket_id+","+reciever_socket].push(message);
         }
        
-        if ( log_chat[toSocketId+","+fromSocketId] ){
+        if ( log_chat[reciever_socket+","+sender_socket_id] ){
             
-               log_chat[toSocketId+","+fromSocketId].push(mensagem);
+               log_chat[reciever_socket+","+sender_socket_id].push(message);
 
         }else{
 
-            log_chat[toSocketId+","+fromSocketId] = [];
-            log_chat[toSocketId+","+fromSocketId].push(mensagem);
+            log_chat[reciever_socket+","+sender_socket_id] = [];
+            log_chat[reciever_socket+","+sender_socket_id].push(message);
 
         }
         
     });
     
     socket.on('getHistory', function (data) {
-        var mySocket = data.mySocket;
-        var friendsSocket = data.friendsSocket;
+        var my_socket = socket.id;
+        var friend_socket = data.friend_socket;
 
-        var history = log_chat[friendsSocket+","+mySocket];
+        var history = log_chat[friend_socket+","+my_socket];
         
         socket.emit('sendHistory', history);
-        //console.log("Meu id: "+mySocket+"| Amigo id: "+friendsSocket);
-        //console.log(log_chat[mySocket+friendsSocket]);
     });
 
     socket.on("disconnect", function(){
         if (debug){
-            console.log("disconnected : " + usuarios[socket.id].nome);
+            console.log("disconnected : " + users[socket.id].name+" -> "+socket.id);
         }
 
-        for (var usuario in usuarios){
-            var socket_id = usuarios[usuario].socketId;
+        for (var usuario in users){
+            var socket_id = users[usuario].socket_id;
             
             if (socket_id != socket.id){
                 delete log_chat[socket.id+","+socket_id];
-                delete log_chat[socket_id+","+socket.id];
             }
             
         }
 
-        delete usuarios[socket.id];
+        delete users[socket.id];
         
         if (debug){
             console.log(log_chat);
         }
 
-        io.sockets.emit('disconnectedClient', {socketId : socket.id} );
+        io.sockets.emit('disconnectedClient', {socket_id : socket.id} );
     });
     
 });

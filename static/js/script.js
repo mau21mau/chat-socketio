@@ -1,25 +1,36 @@
 
 $(document).ready( function(){
-    my_debug = "";
-    $("#conectar").click(function(){
-        var nome = $("#nome-field").val();
+    $("#name-field").focus();
 
-        if (nome != ""){
-            $("#nome").html(nome);
+    $("#connect").click(function(){
+        handle_connect_form();
+    });
 
-            $("#conectar").addClass("connecting");
-            $("#conectar").html("Connecting...");
-
-            // Inicia o client
-            app_client.init();
-
-        }else{
-            alert("Insira um nome!");
+    $("#name-field").keypress(function(e) {
+        if(e.which == 13) {
+            handle_connect_form();
+            return false;
         }
-
     });
 
 });
+
+function handle_connect_form(){
+    var name = $("#name-field").val();
+
+    if (name != ""){
+        $("#name").html(name);
+
+        $("#connect").addClass("connecting");
+        $("#connect").html("Connecting...");
+
+        // Start the client
+        app_client.init();
+
+    }else{
+        alert("Insert the name!");
+    }
+}
 
 window.onbeforeunload = function(event) {
     if (app_client) {
@@ -54,17 +65,17 @@ var app_client = {
                 $("#column2 .userset-overlay").fadeIn('slow');
                 app_client.client_socket = io.connect("/", {secure:false});
 
-                app_client.client_name = $("#nome-field").val();
-                app_client.client_socket.emit('saveConnection', { nome: app_client.client_name });
+                app_client.client_name = $("#name-field").val();
+                app_client.client_socket.emit('saveConnection', { name: app_client.client_name });
 
                 
                 app_client.client_socket.on('connect', function () {
-                    $("#conectar").fadeOut(500);
-                    $("#desconectar").fadeIn(500);
-                    $("#nome-field").slideUp(500);
-                    $("#nome").slideDown(500);
-                    $("#conectar").removeClass("connecting");
-                    $("#conectar").html("Connect");
+                    $("#connect").fadeOut(500);
+                    $("#desconnect").fadeIn(500);
+                    $("#name-field").slideUp(500);
+                    $("#name").slideDown(500);
+                    $("#connect").removeClass("connecting");
+                    $("#connect").html("Connect");
                     // once client connects, clear the reconnection interval function
                     clearInterval(intervalID);
                     console.log("Connected!");
@@ -76,16 +87,16 @@ var app_client = {
                     console.log(data);
                     var connected_users = data;
                     var str_content = "";
-                    for (var usuario in connected_users){
-                        var nome_usuario = connected_users[usuario].nome;
-                        var socket_id = connected_users[usuario].socketId;
+                    for (var user in connected_users){
+                        var name_user = connected_users[user].name;
+                        var socket_id = connected_users[user].socket_id;
                         
                         if (socket_id != app_client.client_socket.socket.sessionid){
-                           var str_content = str_content + '<div class="usuario" rel="'+nome_usuario+'" id="'+socket_id+'">'+nome_usuario+'</div>';
+                           var str_content = str_content + '<div class="user" rel="'+name_user+'" id="'+socket_id+'">'+name_user+'</div>';
                         }
                     }
                     if (str_content != ""){
-                        $("#usuarios").html( $(str_content).fadeIn(500));
+                        $("#users").html($(str_content).fadeIn(500));
                     }else{
                         $("#column2 h4").first().html("No one else seems to be connected.");
                     }
@@ -93,19 +104,18 @@ var app_client = {
                 });
 
                 app_client.client_socket.on('reciveNewClient', function(data){
-                    
-                    var nome_usuario = data.nome;
-                    var socket_id = data.socketId;
-                    console.debug(nome_usuario+" responde no socket: "+socket_id);
+                    var name_user = data.name;
+                    var socket_id = data.socket_id;
+                    console.debug(name_user+" responde no socket: "+socket_id);
                     if (socket_id != app_client.client_socket.socket.sessionid){
                         $("#column2 h4").first().fadeOut('slow');
-                        var str_content = '<div class="usuario" rel="'+nome_usuario+'" id="'+socket_id+'">'+nome_usuario+'</div>';
-                        $("#usuarios").append( $(str_content).fadeIn(500) );
+                        var str_content = '<div class="user" rel="'+name_user+'" id="'+socket_id+'">'+name_user+'</div>';
+                        $("#users").append( $(str_content).fadeIn(500) );
                     }
                     
                 });
 
-                $("#enviar").click( function(){
+                $("#send").click( function(){
                     send_message();
                 });
 
@@ -116,83 +126,83 @@ var app_client = {
                     }
                 });
 
-                // Recebe a mensagem do amigo
+                // Recebe a message do amigo
                 app_client.client_socket.on('recieveMessage', function (data) {
                     var recieved_message = data.message;
-                    var sender = data.sender;
-                    console.debug("Enviada POR "+data.senderSocket);
-                    var new_message =  createFriendMessage( sender, recieved_message );
+                    var sender_name = data.sender_name;
+                    console.debug("message recebida de "+sender_name+", id: "+data.sender_socket);
+                    var new_message =  createFriendMessage( sender_name, recieved_message );
 
                     if ( $(".new-messages") ){
                         var id = $(".new-messages").attr("data-idinterval");
                         window.clearInterval(id);
                     }
                     
-                    if (!$("#"+data.senderSocket).hasClass("current")){
-                        var idInterval = blink( $("#"+data.senderSocket) );
+                    if (!$("#"+data.sender_socket).hasClass("current")){
+                        var idInterval = blink( $("#"+data.sender_socket) );
                     }
 
-                    $("#"+data.senderSocket).attr("data-idinterval", idInterval);
-                    $("#"+data.senderSocket).addClass("new-messages");
+                    $("#"+data.sender_socket).attr("data-idinterval", idInterval);
+                    $("#"+data.sender_socket).addClass("new-messages");
                     
                     var socketCurrent = $(".current").attr("id");
-                    if (socketCurrent == data.senderSocket){
-                        $("#menssages").append( $(new_message).fadeIn(500) );
+                    if (socketCurrent == data.sender_socket){
+                        $("#messages").append( $(new_message).fadeIn(500) );
                     }
 
                 });
                 
 
-                $(document).on("click", ".usuario", function(){
+                $(document).on("click", ".user", function(){
 
-                    var friendSocketId = $(this).attr("id");
+                    var friend_socket = $(this).attr("id");
 
                     var isCurrent = $(this).hasClass("current");
                     console.debug(isCurrent);
                     if ( !isCurrent ){
                         //alert("oi");
-                        app_client.client_socket.emit('getHistory', { mySocket: app_client.client_socket.socket.sessionid, friendsSocket : friendSocketId });
+                        app_client.client_socket.emit('getHistory', { friend_socket : friend_socket });
                     }
 
                     $(".current").removeClass("current");
                     $(this).addClass("current");
-                    var nome_usuario = $(this).attr("rel");
-                    $("#friend").html("Falando com " + nome_usuario);
+                    var name_user = $(this).attr("rel");
+                    $("#friend").html("Talking to " + name_user);
                     $("#friend").fadeIn(500);
 
 
-                    console.debug("conectado a: "+friendSocketId);
+                    console.debug("conectado a: "+friend_socket);
 
                     // Pega o Historico das conversas
                     app_client.client_socket.on('sendHistory', function (data) {
 
-                    if (data){ // Se tiver alguma conversa no historico com o usuario clicado exibe
+                    if (data){ // Se tiver alguma conversa no historico com o user clicado exibe
 
                         console.debug(data);
 
-                        $("#menssages").html(""); // Limpa o container de mensagens
+                        $("#messages").html(""); // Limpa o container de mensagens
 
                         for ( var i = 0; i < data.length; i++ ){
-                            var senderSocket = data[i].fromSocketId;
-                            var elementMensagem = "";
+                            var sender_socket = data[i].sender_socket;
+                            var elementmessage = "";
 
-                            if ( senderSocket == app_client.client_socket.socket.sessionid ){
+                            if ( sender_socket == app_client.client_socket.socket.sessionid ){
 
-                                elementMensagem = createMyMessage(data[i].sender, data[i].message);
+                                elementmessage = createMyMessage(data[i].sender_name, data[i].message);
 
-                                $("#menssages").append( $(elementMensagem).fadeIn(500) );
+                                $("#messages").append( $(elementmessage).fadeIn(500) );
 
                             }else{
-                                elementMensagem = createFriendMessage(data[i].sender, data[i].message);
+                                elementmessage = createFriendMessage(data[i].sender_name, data[i].message);
                                 console.debug(data[i].message);
-                                $("#menssages").append( $(elementMensagem).fadeIn(500) );
+                                $("#messages").append( $(elementmessage).fadeIn(500) );
 
                             }
 
                         }
 
                     }else{
-                        $("#menssages").html("");
+                        $("#messages").html("");
                     }
 
                     });
@@ -205,25 +215,25 @@ var app_client = {
                     window.clearInterval(idInterval);
                 });
 
-                $("#desconectar").click(function(){
+                $("#desconnect").click(function(){
                     $("#"+app_client.client_socket.socket.sessionid).fadeOut(500, function(){
                         $("#"+app_client.client_socket.socket.sessionid).remove();
                     });
                     app_client.client_socket.disconnect();
 
-                    $("#conectar").fadeOut(500, function(){
-                        $("#desconectar").fadeIn(500, function(){
-                            $("#nome-field").slideUp(500, function(){
-                                $("#nome").slideDown(500);
+                    $("#connect").fadeOut(500, function(){
+                        $("#desconnect").fadeIn(500, function(){
+                            $("#name-field").slideUp(500, function(){
+                                $("#name").slideDown(500);
                             });
                         });
                     });
 
-                    $("#nome").html("");
-                    $("#nome").slideUp(500, function(){
-                        $("#nome-field").slideDown(500, function(){
-                            $("#desconectar").fadeOut(500, function(){
-                                $("#conectar").fadeIn(500);
+                    $("#name").html("");
+                    $("#name").slideUp(500, function(){
+                        $("#name-field").slideDown(500, function(){
+                            $("#desconnect").fadeOut(500, function(){
+                                $("#connect").fadeIn(500);
                             });
                         });
                     });
@@ -232,9 +242,9 @@ var app_client = {
 
                 app_client.client_socket.on('disconnectedClient', function(data){
                     //alert("OI");
-                    $("#"+data.socketId).fadeOut(500, function(){
-                        $("#"+data.socketId).remove();
-                        if ($(".usuario").length == 0){
+                    $("#"+data.socket_id).fadeOut(500, function(){
+                        $("#"+data.socket_id).remove();
+                        if ($(".user").length == 0){
                             $("#column2 h4").first().fadeIn('slow');
                         }
                     });
@@ -251,12 +261,12 @@ var app_client = {
 
 
 
-function createMyMessage(nome, texto){
-    return '<div class="mensagem">'+
+function createMyMessage(name, texto){
+    return '<div class="message">'+
     '<div class="profile-image"></div>'+
     '<div class="wrap-balloon my-message">'+
     '<div class="my-balloon-header">'+
-    '<p class="user-name">'+nome+'</p>'+
+    '<p class="user-name">'+name+'</p>'+
     '</div>'+
     '<div class="my-balloon-text">'+
     '<p class="text-message">'+texto+'</p>'+
@@ -267,12 +277,12 @@ function createMyMessage(nome, texto){
     '</div>';
 }
 
-function createFriendMessage(nome, texto){
-    return '<div class="mensagem">'+
+function createFriendMessage(name, texto){
+    return '<div class="message">'+
     '<div class="profile-image"></div>'+
     '<div class="wrap-balloon friend-message">'+
     '<div class="friend-balloon-header">'+
-    '<p class="user-name">'+nome+'</p>'+
+    '<p class="user-name">'+name+'</p>'+
     '</div>'+
     '<div class="friend-balloon-text">'+
     '<p class="text-message">'+texto+'</p>'+
@@ -311,19 +321,19 @@ function send_message(){
                     
     if (amigo_conetado == 1) {
         var msg_text = document.getElementById("text-field").value;
-        var socketId = $(".current").attr("id");
+        var reciever_socket = $(".current").attr("id");
 
-        var data = {message: msg_text, socket : socketId, sender: app_client.client_socket.socket.sessionid }
-        console.debug(data.sender);
-        // Envia mensagem para o amigo
+        var data = {message: msg_text, socket : reciever_socket}
+        console.debug(data.sender_socket);
+        // Envia message para o amigo
         app_client.client_socket.emit('sendMessage', data);
         
         document.getElementById("text-field").value = "";
         
-        var meu_nome = $("#nome").html();
-        var minha_mensagem = createMyMessage(meu_nome, msg_text);
+        var meu_name = $("#name").html();
+        var minha_message = createMyMessage(meu_name, msg_text);
 
-        $("#menssages").append( $(minha_mensagem).fadeIn(500) );
+        $("#messages").append( $(minha_message).fadeIn(500) );
 
         $("#text-field").focus();
         

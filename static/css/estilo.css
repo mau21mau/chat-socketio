@@ -85,18 +85,18 @@ body{
     float: left;
 }
 
-#conectar{
+#connect{
     border: solid 1px #FFF;
     text-align: center;
     color: #FFF;
     background-color: #25547B;
 }
 
-#conectar.connecting{
+#connect.connecting{
     background-color: #758592;
 }
 
-#desconectar{
+#desconnect{
     background-color: #BF3330;
     border: solid 1px #FFF;
     color: #FFF;
@@ -104,7 +104,7 @@ body{
     margin-left: 10px;
 }
 
-#nome-field{
+#name-field{
     outline: none;
     height: 25px;
     display: block;
@@ -115,7 +115,7 @@ body{
     float: left;
 }
 
-#nome{
+#name{
     display: block;
     border-radius: 5px;
     border: solid 1px #FFF;
@@ -164,7 +164,7 @@ body{
     margin-bottom: 0px;
 }
 
-#enviar{
+#send{
     padding: 5px;
     position: absolute;
     right: 0px;
@@ -176,7 +176,7 @@ body{
     border-radius: 5px 0 5px 0;
 }
 
-#usuarios{
+#users{
     width: 210px;
     height: 576px;
     margin-top: 34px;
@@ -184,7 +184,7 @@ body{
     border-radius: -5px -5px 5px 5px;
 }
 
-.usuario{
+.user{
     display: block;
     height: 25px;
     width: 200px;
@@ -199,16 +199,16 @@ body{
     cursor: pointer;
 }
 
-.usuario:hover{
+.user:hover{
     background: #A6C0E2;
 }
 
-.usuario.current{
+.user.current{
     background-color: #C5E3E7;
 }
 
 
-#menssages{
+#messages{
     width: 630px;
     margin: 20px auto;
     padding: 5px;
@@ -219,7 +219,7 @@ body{
     background-color: #FFF;
 }
 
-#menssages .mensagem{
+#messages .message{
     display: none;
 }
 
