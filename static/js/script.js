@@ -57,13 +57,14 @@ window.onbeforeunload = function(event) {
 var app_client = {
     client_socket: null,
     client_name: null,
+    socket_port: 3000,
 
     init: function(){
 
         if (!app_client.client_socket) {
             // use a connect() or reconnect() here if you want
             app_client.client_socket = io.connect("/", {
-                port: 3000,
+                port: this.socket_port,
                 'connect timeout': 5000,
                 'flash policy port': 10843
             });
@@ -72,19 +73,25 @@ var app_client = {
             app_client.client_socket.emit('saveConnection', { name: app_client.client_name });
 
             app_client.client_socket.on('connect_failed', function() {
-                $("#connect").html("Failed! Retry...");
-                $("#connect").removeClass("connecting");
-                $("#connect").addClass("failed");
-                animate_form_disconnect();
-                console.log("Connection attempt failed");
+                var seccond_attempt = try_other_port();
+                if (!seccond_attempt){
+                    $("#connect").html("Failed! Retry...");
+                    $("#connect").removeClass("connecting");
+                    $("#connect").addClass("failed");
+                    animate_form_disconnect();
+                    console.log("Connection attempt failed");
+                }
             });
 
             app_client.client_socket.on('error', function() {
-                $("#connect").html("Failed! Retry...");
-                $("#connect").removeClass("connecting");
-                $("#connect").addClass("failed");
-                animate_form_disconnect();
-                console.log("Connection attempt error");
+                var seccond_attempt = try_other_port();
+                if (!seccond_attempt){
+                    $("#connect").html("Failed! Retry...");
+                    $("#connect").removeClass("connecting");
+                    $("#connect").addClass("failed");
+                    animate_form_disconnect();
+                    console.log("Connection attempt error");
+                }
             });
 
             app_client.client_socket.on('connect', function () {
@@ -374,7 +381,19 @@ function animate_form_disconnect(){
 }
 
 
-
+try_other_port = function() {
+  if (app_client.socket_port !== 80) {
+    if (typeof console !== "undefined" && console !== null) {
+      console.log("Trying other port, instead of port " + app_client.socket_port + ", attempting port 80");
+    }
+    app_client.socket_port = 80;
+    app_client.client_socket.socket.options.port = app_client.socket_port;
+    app_client.client_socket.socket.options.transports = ['htmlfile', 'xhr-multipart', 'xhr-polling', 'jsonp-polling'];
+    return app_client.client_socket.socket.connect();
+  } else {
+    return typeof console !== "undefined" && console !== null ? console.log("No other ports to try.") : void 0;
+  }
+};
 
 
 
