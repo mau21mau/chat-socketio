@@ -363,7 +363,7 @@ function send_message(){
         $("#text-field").focus();
         
     }else{
-        alert("Selecione um amigo");
+        alert("Click on a client to talk!");
     }
 }
 
