@@ -1,0 +1,21 @@
+{
+    "name": "chat-socketio",
+    "description": "(pending)",
+    "version": "0.0.1",
+    "main": "./chat-socketio.js",
+    "author": {
+        "name": "Mauricio Júnior",
+        "email": "mauricio14junior@gmail.com"
+    },
+    "keywords": [],
+    "licenses": {
+        "type": "none"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/YOUR_LOGIN/chat-socketio.git"
+    },
+    "bugs": {
+        "web": "http://github.com/YOUR_LOGIN/chat-socketio/issues"
+    }
+}

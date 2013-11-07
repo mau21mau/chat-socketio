@@ -96,7 +96,12 @@ body{
     background-color: #758592;
 }
 
-#desconnect{
+#connect.failed{
+    background-color: #D5D15D;
+    color: #000000;
+}
+
+#disconnect{
     background-color: #BF3330;
     border: solid 1px #FFF;
     color: #FFF;
@@ -212,7 +217,7 @@ body{
     width: 630px;
     margin: 20px auto;
     padding: 5px;
-    max-height: 600px;
+    max-height: 442px;
     border: solid 1px #25547B;
     border-radius: 5px;
     overflow: auto;
