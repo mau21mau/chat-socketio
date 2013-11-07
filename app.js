@@ -6,10 +6,11 @@ var app = http.createServer(function(req, res) {
     var index = fs.readFileSync(__dirname + '/index.html');
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
     res.end(index);
-});
+}).listen('/tmp/chat_socketio.socket');
 
 // Socket.io server listens to our app
 var io = require('socket.io').listen(app, {log: false});
+io.set('transports', ['xhr-polling']);
 
 var connected_clients = {};
 var users = {};
@@ -106,10 +107,10 @@ var connection = io.sockets.on('connection', function(socket) {
 
         io.sockets.emit('disconnectedClient', {socket_id: socket.id});
         delete users[socket.id];
-        
+
     });
 
 });
 
 debugger;
-app.listen(3000, "127.0.0.1");
+//app

@@ -63,11 +63,7 @@ var app_client = {
 
         if (!app_client.client_socket) {
             // use a connect() or reconnect() here if you want
-            app_client.client_socket = io.connect("/", {
-                port: this.socket_port,
-                'connect timeout': 5000,
-                'flash policy port': 10843
-            });
+            app_client.client_socket = io.connect("/");
 
             app_client.client_name = $("#name-field").val();
             app_client.client_socket.emit('saveConnection', { name: app_client.client_name });
